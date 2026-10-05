@@ -16,6 +16,40 @@ const clearButton =
 const chat =
     document.getElementById("chat");
 
+const chatHeader =
+    document.getElementById("chatHeader");
+
+const messageStatusInput =
+    document.getElementById("messageStatus");
+
+
+/* =========================================
+   STATUS BAR ELEMENTS
+========================================= */
+
+const phoneTimeInput =
+    document.getElementById("phoneTime");
+
+const wifiStrengthInput =
+    document.getElementById("wifiStrength");
+
+const batteryLevelInput =
+    document.getElementById("batteryLevel");
+
+const previewTime =
+    document.getElementById("previewTime");
+
+const previewWifi =
+    document.getElementById("previewWifi");
+
+const batteryFill =
+    document.getElementById("batteryFill");
+
+const previewBatteryText =
+    document.getElementById(
+        "previewBatteryText"
+    );
+
 
 /* =========================================
    GENERATE CONVERSATION
@@ -31,6 +65,11 @@ function generateConversation() {
 
     const text =
         dialogueInput.value.trim();
+
+    const messageStatus =
+        messageStatusInput
+            ? messageStatusInput.value
+            : "none";
 
 
     /* =========================================
@@ -73,6 +112,15 @@ function generateConversation() {
 
     chat.innerHTML = "";
 
+    chatHeader.innerHTML = "";
+
+
+    /* =========================================
+       UPDATE STATUS BAR
+    ========================================= */
+
+    updateStatusBar();
+
 
     /* =========================================
        CREATE CHAT HEADER
@@ -97,27 +145,20 @@ function generateConversation() {
         line = line.trim();
 
 
-        /*
-           Ignore completely blank lines.
-        */
+        /* =====================================
+           IGNORE EMPTY LINES
+        ===================================== */
 
         if (line === "") {
+
             return;
+
         }
 
 
-        /* =========================================
-           CHECK FOR CUSTOM TIMESTAMP
-        ========================================= */
-
-        /*
-           Example:
-
-           [TIME: Oct 3 at 4:34 PM]
-
-           Everything between "[TIME:"
-           and "]" becomes the timestamp.
-        */
+        /* =====================================
+           CHECK FOR TIMESTAMP
+        ===================================== */
 
         const timeMatch =
             line.match(
@@ -136,23 +177,22 @@ function generateConversation() {
             });
 
             return;
+
         }
 
 
-        /* =========================================
+        /* =====================================
            CHECK FOR MESSAGE
-        ========================================= */
+        ===================================== */
 
         const colonIndex =
             line.indexOf(":");
 
 
-        /*
-           If there is no colon, ignore the line.
-        */
-
         if (colonIndex === -1) {
+
             return;
+
         }
 
 
@@ -168,16 +208,13 @@ function generateConversation() {
                 .trim();
 
 
-        /*
-           Ignore malformed messages.
-        */
-
         if (
             speaker === "" ||
             message === ""
         ) {
 
             return;
+
         }
 
 
@@ -209,6 +246,38 @@ function generateConversation() {
 
 
     /* =========================================
+       FIND MOST RECENT SENDER MESSAGE
+    ========================================= */
+
+    let mostRecentSenderMessageIndex =
+        -1;
+
+
+    for (
+        let i = messages.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        if (
+            messages[i].type === "message" &&
+            messages[i].speaker
+                .trim()
+                .toLowerCase() ===
+            sender.toLowerCase()
+        ) {
+
+            mostRecentSenderMessageIndex =
+                i;
+
+            break;
+
+        }
+
+    }
+
+
+    /* =========================================
        CREATE CHAT CONTENT
     ========================================= */
 
@@ -216,23 +285,27 @@ function generateConversation() {
         (item, index) => {
 
 
-            /* =====================================
+            /* =================================
                TIMESTAMP
-            ===================================== */
+            ================================= */
 
-            if (item.type === "timestamp") {
+            if (
+                item.type ===
+                "timestamp"
+            ) {
 
                 createTimestamp(
                     item.text
                 );
 
                 return;
+
             }
 
 
-            /* =====================================
-               MESSAGE
-            ===================================== */
+            /* =================================
+               CURRENT SPEAKER
+            ================================= */
 
             const currentSpeaker =
                 item.speaker
@@ -240,17 +313,13 @@ function generateConversation() {
                     .toLowerCase();
 
 
-            /*
-               Find the previous actual message.
+            /* =================================
+               FIND PREVIOUS MESSAGE
+            ================================= */
 
-               This skips timestamps.
+            let previousMessage =
+                null;
 
-               That way a timestamp doesn't
-               accidentally break a group of
-               messages from the same person.
-            */
-
-            let previousMessage = null;
 
             for (
                 let i = index - 1;
@@ -259,24 +328,27 @@ function generateConversation() {
             ) {
 
                 if (
-                    messages[i].type === "message"
+                    messages[i].type ===
+                    "message"
                 ) {
 
                     previousMessage =
                         messages[i];
 
                     break;
+
                 }
+
             }
 
 
-            /*
-               Find the next actual message.
+            /* =================================
+               FIND NEXT MESSAGE
+            ================================= */
 
-               This also skips timestamps.
-            */
+            let nextMessage =
+                null;
 
-            let nextMessage = null;
 
             for (
                 let i = index + 1;
@@ -285,27 +357,26 @@ function generateConversation() {
             ) {
 
                 if (
-                    messages[i].type === "message"
+                    messages[i].type ===
+                    "message"
                 ) {
 
                     nextMessage =
                         messages[i];
 
                     break;
+
                 }
+
             }
 
 
-            /* =====================================
+            /* =================================
                DETERMINE SIDE
-            ===================================== */
+            ================================= */
 
             let side;
 
-
-            /*
-               Sender = RIGHT
-            */
 
             if (
                 currentSpeaker ===
@@ -317,10 +388,6 @@ function generateConversation() {
             }
 
 
-            /*
-               Recipient = LEFT
-            */
-
             else if (
                 currentSpeaker ===
                 recipient.toLowerCase()
@@ -331,11 +398,6 @@ function generateConversation() {
             }
 
 
-            /*
-               If a different name was entered,
-               default it to the left side.
-            */
-
             else {
 
                 side = "left";
@@ -343,9 +405,9 @@ function generateConversation() {
             }
 
 
-            /* =====================================
-               DETERMINE MESSAGE GROUP
-            ===================================== */
+            /* =================================
+               DETERMINE GROUP
+            ================================= */
 
             const previousSpeaker =
                 previousMessage
@@ -363,27 +425,42 @@ function generateConversation() {
                     : null;
 
 
-            /*
-               First message in a group
-            */
-
             const isFirstInGroup =
                 currentSpeaker !==
                 previousSpeaker;
 
-
-            /*
-               Last message in a group
-            */
 
             const isLastInGroup =
                 currentSpeaker !==
                 nextSpeaker;
 
 
-            /* =====================================
+            /* =================================
+               CHECK MESSAGE STATUS
+            ================================= */
+
+            const isMostRecentSenderMessage =
+                index ===
+                mostRecentSenderMessageIndex;
+
+
+            let status = "";
+
+
+            if (
+                isMostRecentSenderMessage &&
+                messageStatus !== "none"
+            ) {
+
+                status =
+                    messageStatus;
+
+            }
+
+
+            /* =================================
                CREATE MESSAGE
-            ===================================== */
+            ================================= */
 
             createMessage(
 
@@ -393,12 +470,163 @@ function generateConversation() {
 
                 isFirstInGroup,
 
-                isLastInGroup
+                isLastInGroup,
+
+                status
 
             );
 
         }
     );
+
+
+    /* =========================================
+       SCROLL TO BOTTOM
+    ========================================= */
+
+    setTimeout(() => {
+
+        chat.scrollTop =
+            chat.scrollHeight;
+
+    }, 10);
+
+}
+
+
+/* =========================================
+   UPDATE STATUS BAR
+========================================= */
+
+function updateStatusBar() {
+
+    /* =====================================
+       TIME
+    ===================================== */
+
+    let time =
+        phoneTimeInput.value.trim();
+
+
+    if (time === "") {
+
+        time = "9:41";
+
+    }
+
+
+    previewTime.textContent =
+        time;
+
+
+    /* =====================================
+       WIFI
+    ===================================== */
+
+    const wifi =
+        wifiStrengthInput.value;
+
+
+    previewWifi.classList.remove(
+
+        "off",
+
+        "weak",
+
+        "medium",
+
+        "strong",
+
+        "full"
+
+    );
+
+
+    previewWifi.classList.add(
+        wifi
+    );
+
+
+    /* =====================================
+       BATTERY
+    ===================================== */
+
+    let battery =
+        parseInt(
+            batteryLevelInput.value,
+            10
+        );
+
+
+    if (
+        isNaN(battery)
+    ) {
+
+        battery = 87;
+
+    }
+
+
+    battery =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                battery
+            )
+        );
+
+
+    batteryLevelInput.value =
+        battery;
+
+
+    batteryFill.style.width =
+        battery + "%";
+
+
+    previewBatteryText.textContent =
+        battery + "%";
+
+
+    /* =====================================
+       BATTERY COLOR
+    ===================================== */
+
+    batteryFill.classList.remove(
+
+        "low",
+
+        "medium",
+
+        "normal"
+
+    );
+
+
+    if (battery <= 20) {
+
+        batteryFill.classList.add(
+            "low"
+        );
+
+    }
+
+    else if (battery <= 40) {
+
+        batteryFill.classList.add(
+            "medium"
+        );
+
+    }
+
+    else {
+
+        batteryFill.classList.add(
+            "normal"
+        );
+
+    }
 
 }
 
@@ -418,9 +646,9 @@ function createChatHeader(name) {
     );
 
 
-    /* =========================================
+    /* =====================================
        AVATAR
-    ========================================= */
+    ===================================== */
 
     const avatar =
         document.createElement("div");
@@ -431,10 +659,6 @@ function createChatHeader(name) {
     );
 
 
-    /*
-       Create initials from the name.
-    */
-
     const words =
         name.split(" ");
 
@@ -442,13 +666,16 @@ function createChatHeader(name) {
     let initials = "";
 
 
-    if (words.length === 1) {
+    if (
+        words.length === 1
+    ) {
 
         initials =
             words[0]
                 .substring(0, 2);
 
     }
+
 
     else {
 
@@ -463,9 +690,9 @@ function createChatHeader(name) {
         initials.toUpperCase();
 
 
-    /* =========================================
+    /* =====================================
        CONTACT NAME
-    ========================================= */
+    ===================================== */
 
     const contactName =
         document.createElement("div");
@@ -480,9 +707,9 @@ function createChatHeader(name) {
         name;
 
 
-    /* =========================================
+    /* =====================================
        ADD TO HEADER
-    ========================================= */
+    ===================================== */
 
     header.appendChild(
         avatar
@@ -494,7 +721,7 @@ function createChatHeader(name) {
     );
 
 
-    chat.appendChild(
+    chatHeader.appendChild(
         header
     );
 
@@ -509,7 +736,8 @@ function createMessage(
     messageText,
     side,
     isFirstInGroup,
-    isLastInGroup
+    isLastInGroup,
+    status
 ) {
 
     const row =
@@ -522,11 +750,13 @@ function createMessage(
     );
 
 
-    /* =========================================
+    /* =====================================
        GROUP CLASSES
-    ========================================= */
+    ===================================== */
 
-    if (isFirstInGroup) {
+    if (
+        isFirstInGroup
+    ) {
 
         row.classList.add(
             "first-in-group"
@@ -535,7 +765,9 @@ function createMessage(
     }
 
 
-    if (isLastInGroup) {
+    if (
+        isLastInGroup
+    ) {
 
         row.classList.add(
             "last-in-group"
@@ -556,9 +788,9 @@ function createMessage(
     }
 
 
-    /* =========================================
+    /* =====================================
        CREATE BUBBLE
-    ========================================= */
+    ===================================== */
 
     const bubble =
         document.createElement("div");
@@ -573,10 +805,6 @@ function createMessage(
         messageText;
 
 
-    /* =========================================
-       ADD BUBBLE TO ROW
-    ========================================= */
-
     row.appendChild(
         bubble
     );
@@ -585,6 +813,51 @@ function createMessage(
     chat.appendChild(
         row
     );
+
+
+    /* =====================================
+       MESSAGE STATUS
+    ===================================== */
+
+    if (
+        status !== "" &&
+        side === "right"
+    ) {
+
+        const statusRow =
+            document.createElement("div");
+
+
+        statusRow.classList.add(
+            "message-status-row"
+        );
+
+
+        const statusText =
+            document.createElement("div");
+
+
+        statusText.classList.add(
+            "message-status"
+        );
+
+
+        statusText.textContent =
+            status === "read"
+                ? "Read"
+                : "Delivered";
+
+
+        statusRow.appendChild(
+            statusText
+        );
+
+
+        chat.appendChild(
+            statusRow
+        );
+
+    }
 
 }
 
@@ -631,6 +904,35 @@ function clearConversation() {
         "";
 
 
+    if (
+        messageStatusInput
+    ) {
+
+        messageStatusInput.value =
+            "none";
+
+    }
+
+
+    phoneTimeInput.value =
+        "9:41";
+
+
+    wifiStrengthInput.value =
+        "full";
+
+
+    batteryLevelInput.value =
+        "87";
+
+
+    updateStatusBar();
+
+
+    chatHeader.innerHTML =
+        "";
+
+
     chat.innerHTML = `
 
         <div class="empty-message">
@@ -642,6 +944,28 @@ function clearConversation() {
     `;
 
 }
+
+
+/* =========================================
+   STATUS BAR LIVE PREVIEW
+========================================= */
+
+phoneTimeInput.addEventListener(
+    "input",
+    updateStatusBar
+);
+
+
+wifiStrengthInput.addEventListener(
+    "change",
+    updateStatusBar
+);
+
+
+batteryLevelInput.addEventListener(
+    "input",
+    updateStatusBar
+);
 
 
 /* =========================================
@@ -658,3 +982,10 @@ clearButton.addEventListener(
     "click",
     clearConversation
 );
+
+
+/* =========================================
+   INITIAL STATUS BAR
+========================================= */
+
+updateStatusBar();
