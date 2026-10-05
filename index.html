@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Text Conversation Generator</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <div class="app">
+
+
+        <!-- =====================================
+             PAGE HEADER
+        ====================================== -->
+
+        <div class="app-header">
+
+            <h1>
+                Text Conversation Generator
+            </h1>
+
+            <p>
+                Create realistic-looking text conversations.
+            </p>
+
+        </div>
+
+
+
+        <!-- =====================================
+             INPUT SECTION
+        ====================================== -->
+
+        <div class="input-section">
+
+
+            <!-- PERSON BEING TEXTED -->
+
+            <div class="name-input">
+
+                <label for="recipient">
+                    Person Being Texted
+                </label>
+
+                <input
+                    type="text"
+                    id="recipient"
+                    placeholder="Example: Alex"
+                >
+
+            </div>
+
+
+
+            <!-- PERSON DOING THE TEXTING -->
+
+            <div class="name-input">
+
+                <label for="sender">
+                    Person Doing the Texting
+                </label>
+
+                <input
+                    type="text"
+                    id="sender"
+                    placeholder="Example: Jamie"
+                >
+
+            </div>
+
+
+
+            <!-- =================================
+                 CONVERSATION + INSTRUCTIONS
+            ================================== -->
+
+            <div class="conversation-layout">
+
+
+                <!-- CONVERSATION -->
+
+                <div class="dialogue-input">
+
+                    <label for="dialogue">
+                        Conversation
+                    </label>
+
+
+                    <textarea
+                        id="dialogue"
+                        placeholder="Enter your conversation here..."
+                    ></textarea>
+
+                </div>
+
+
+
+                <!-- =================================
+                     INSTRUCTIONS
+                ================================== -->
+
+                <div class="instructions">
+
+                    <h3>
+                        Instructions
+                    </h3>
+
+
+                    <p>
+                        Write each message using:
+                    </p>
+
+
+                    <div class="instruction-example">
+                        Name: Message
+                    </div>
+
+
+                    <p>
+                        The name must match one of the
+                        two names above so the generator
+                        knows which side to put the message
+                        on.
+                    </p>
+
+
+                    <p>
+                        To add a timestamp, use:
+                    </p>
+
+
+                    <div class="instruction-example">
+                        [TIME: Today at 4:34 PM]
+                    </div>
+
+
+                    <p>
+                        You can write anything you want
+                        inside the timestamp brackets.
+                    </p>
+
+
+                    <p>
+                        Timestamps are optional. If you
+                        don't add one, none will appear
+                        automatically.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- GENERATE -->
+
+            <button id="generateButton">
+                Generate Conversation
+            </button>
+
+
+        </div>
+
+
+
+        <!-- =====================================
+             PREVIEW SECTION
+        ====================================== -->
+
+        <div class="preview-section">
+
+
+            <!-- PREVIEW HEADER -->
+
+            <div class="preview-header">
+
+                <h2>
+                    Preview
+                </h2>
+
+
+                <button
+                    id="clearButton"
+                    class="secondary-button"
+                >
+                    Clear
+                </button>
+
+            </div>
+
+
+
+            <!-- CHAT -->
+
+            <div
+                id="chat"
+                class="chat"
+            >
+
+                <div class="empty-message">
+
+                    Your conversation will appear here.
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
+
+    <script src="script.js"></script>
+
+
+</body>
+
+</html>
