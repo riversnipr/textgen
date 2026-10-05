@@ -23,192 +23,484 @@
 <body>
 
 
-    <div class="app">
+<div class="app">
 
 
-        <!-- =====================================
-             PAGE HEADER
-        ====================================== -->
+    <!-- =================================
+         PAGE HEADER
+    ================================== -->
 
-        <div class="app-header">
+    <header class="app-header">
 
-            <h1>
-                Text Conversation Generator
-            </h1>
+        <h1>
+            Text Conversation Generator
+        </h1>
 
-            <p>
-                Create realistic-looking text conversations.
-            </p>
+        <p>
+            Create a realistic text-message conversation preview.
+        </p>
+
+    </header>
+
+
+
+    <!-- =================================
+         INPUT SECTION
+    ================================== -->
+
+    <section class="input-section">
+
+
+        <!-- =================================
+             RECIPIENT
+        ================================== -->
+
+        <div class="name-input">
+
+            <label for="recipient">
+                Recipient
+            </label>
+
+            <input
+                type="text"
+                id="recipient"
+                placeholder="Julie"
+            >
 
         </div>
 
 
 
-        <!-- =====================================
-             INPUT SECTION
-        ====================================== -->
+        <!-- =================================
+             SENDER
+        ================================== -->
 
-        <div class="input-section">
+        <div class="name-input">
+
+            <label for="sender">
+                Sender
+            </label>
+
+            <input
+                type="text"
+                id="sender"
+                placeholder="John"
+            >
+
+        </div>
 
 
-            <!-- PERSON BEING TEXTED -->
 
-            <div class="name-input">
+        <!-- =================================
+             MESSAGE STATUS
+        ================================== -->
 
-                <label for="recipient">
-                    Person Being Texted
+        <div class="status-input">
+
+            <label for="messageStatus">
+                Message Status
+            </label>
+
+            <select id="messageStatus">
+
+                <option value="none">
+                    None
+                </option>
+
+                <option value="delivered">
+                    Delivered
+                </option>
+
+                <option value="read">
+                    Read
+                </option>
+
+            </select>
+
+        </div>
+
+
+
+        <!-- =================================
+             STATUS BAR SETTINGS
+        ================================== -->
+
+        <div class="phone-settings">
+
+            <h3>
+                Status Bar
+            </h3>
+
+
+            <!-- TIME -->
+
+            <div class="setting-item">
+
+                <label for="phoneTime">
+                    Time
                 </label>
 
                 <input
                     type="text"
-                    id="recipient"
-                    placeholder="Example: Alex"
+                    id="phoneTime"
+                    value="9:41"
+                    placeholder="9:41"
                 >
 
             </div>
 
 
 
-            <!-- PERSON DOING THE TEXTING -->
+            <!-- WIFI -->
 
-            <div class="name-input">
+<label for="wifiStrength">
+    Wi-Fi
+</label>
 
-                <label for="sender">
-                    Person Doing the Texting
+<select id="wifiStrength">
+
+    <option value="off">
+        Off
+    </option>
+
+    <option value="full" selected>
+        On
+    </option>
+
+</select>
+
+
+
+            <!-- BATTERY -->
+
+            <div class="setting-item">
+
+                <label for="batteryLevel">
+                    Battery
                 </label>
 
-                <input
-                    type="text"
-                    id="sender"
-                    placeholder="Example: Jamie"
-                >
+                <div class="battery-input">
+
+                    <input
+                        type="number"
+                        id="batteryLevel"
+                        value="87"
+                        min="0"
+                        max="100"
+                    >
+
+                    <span>%</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================
+             CONVERSATION + INSTRUCTIONS
+        ================================== -->
+
+        <div class="conversation-layout">
+
+
+            <!-- =================================
+                 CONVERSATION INPUT
+            ================================== -->
+
+            <div class="dialogue-input">
+
+                <label for="dialogue">
+                    Conversation
+                </label>
+
+                <textarea
+                    id="dialogue"
+                    placeholder="Write messages here..."
+                ></textarea>
 
             </div>
 
 
 
             <!-- =================================
-                 CONVERSATION + INSTRUCTIONS
+                 INSTRUCTIONS
             ================================== -->
 
-            <div class="conversation-layout">
+            <div class="instructions">
+
+                <h3>
+                    Instructions
+                </h3>
 
 
-                <!-- CONVERSATION -->
-
-                <div class="dialogue-input">
-
-                    <label for="dialogue">
-                        Conversation
-                    </label>
+                <p>
+                    Enter each message on its own line
+                    using this format:
+                </p>
 
 
-                    <textarea
-                        id="dialogue"
-                        placeholder="Enter your conversation here..."
-                    ></textarea>
+                <div class="instruction-example">
+
+                    Name: Message
+
+                </div>
+
+
+                <p>
+                    The name should match either the
+                    Person Being Texted or the Person
+                    Doing the Texting.
+                </p>
+
+
+                <p>
+                    Multiple messages from the same
+                    person will automatically be grouped
+                    together.
+                </p>
+
+
+
+                <h3>
+                    Adding Timestamps
+                </h3>
+
+
+                <p>
+                    Add a custom timestamp on its own
+                    line using:
+                </p>
+
+
+                <div class="instruction-example">
+
+                    [TIME: Oct 3 at 4:34 PM]
 
                 </div>
 
 
-
-                <!-- =================================
-                     INSTRUCTIONS
-                ================================== -->
-
-                <div class="instructions">
-
-                    <h3>
-                        Instructions
-                    </h3>
+                <p>
+                    Timestamps are optional and will only
+                    appear when you add them yourself.
+                </p>
 
 
-                    <p>
-                        Write each message using:
-                    </p>
+
+                <h3>
+                    Message Status
+                </h3>
 
 
-                    <div class="instruction-example">
-                        Name: Message
-                    </div>
+                <p>
+                    Use the
+                    <strong>Message Status</strong>
+                    dropdown above to choose:
+                </p>
 
 
-                    <p>
-                        The name must match one of the
-                        two names above so the generator
-                        knows which side to put the message
-                        on.
-                    </p>
+                <div class="instruction-example">
 
-
-                    <p>
-                        To add a timestamp, use:
-                    </p>
-
-
-                    <div class="instruction-example">
-                        [TIME: Today at 4:34 PM]
-                    </div>
-
-
-                    <p>
-                        You can write anything you want
-                        inside the timestamp brackets.
-                    </p>
-
-
-                    <p>
-                        Timestamps are optional. If you
-                        don't add one, none will appear
-                        automatically.
-                    </p>
+                    None<br>
+                    Delivered<br>
+                    Read
 
                 </div>
 
+
+                <p>
+                    The status appears underneath the
+                    most recent message sent by the
+                    person doing the texting.
+                </p>
+
+
+
+                <h3>
+                    Status Bar
+                </h3>
+
+
+                <p>
+                    Customize the fake phone status bar
+                    using the controls above.
+                </p>
+
+
+                <div class="instruction-example">
+
+                    Time<br>
+                    Wi-Fi strength<br>
+                    Battery percentage
+
+                </div>
 
             </div>
-
-
-
-            <!-- GENERATE -->
-
-            <button id="generateButton">
-                Generate Conversation
-            </button>
 
 
         </div>
 
 
 
-        <!-- =====================================
-             PREVIEW SECTION
-        ====================================== -->
+        <!-- =================================
+             GENERATE BUTTON
+        ================================== -->
 
-        <div class="preview-section">
+        <button id="generateButton">
 
+            Generate Conversation
 
-            <!-- PREVIEW HEADER -->
-
-            <div class="preview-header">
-
-                <h2>
-                    Preview
-                </h2>
+        </button>
 
 
-                <button
-                    id="clearButton"
-                    class="secondary-button"
+    </section>
+
+
+
+    <!-- =================================
+         PREVIEW SECTION
+    ================================== -->
+
+    <section class="preview-section">
+
+
+        <div class="preview-header">
+
+            <h2>
+                Preview
+            </h2>
+
+
+            <button
+                id="clearButton"
+                class="secondary-button"
+            >
+
+                Clear
+
+            </button>
+
+        </div>
+
+
+
+        <!-- =================================
+             CHAT WINDOW
+        ================================== -->
+
+        <div class="chat-window">
+
+
+            <!-- =================================
+                 PHONE STATUS BAR
+            ================================== -->
+
+            <div
+                id="phoneStatusBar"
+                class="phone-status-bar"
+            >
+
+                <div
+                    id="previewTime"
+                    class="status-time"
                 >
-                    Clear
-                </button>
+                    9:41
+                </div>
+
+
+                <div class="status-icons">
+
+
+                    <!-- WIFI -->
+
+                  <div id="previewWifi" class="wifi-icon full">
+
+    <svg
+        viewBox="0 0 24 18"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+    >
+
+        <path
+            class="wifi-outer"
+            d="M2 5.5C7.5 0.5 16.5 0.5 22 5.5"
+        />
+
+        <path
+            class="wifi-middle"
+            d="M5.5 9C9 5.8 15 5.8 18.5 9"
+        />
+
+        <path
+            class="wifi-inner"
+            d="M9 12.5C10.7 11 13.3 11 15 12.5"
+        />
+
+        <circle
+            cx="12"
+            cy="16"
+            r="1.5"
+        />
+
+    </svg>
+
+</div>
+
+
+
+
+
+                    <!-- BATTERY -->
+
+                    <div class="battery-display">
+
+                        <div
+                            id="previewBattery"
+                            class="battery-body"
+                        >
+
+                            <div
+                                id="batteryFill"
+                                class="battery-fill"
+                            ></div>
+
+                        </div>
+
+                        <div class="battery-tip"></div>
+
+                        <span
+                            id="previewBatteryText"
+                            class="battery-text"
+                        >
+                            87%
+                        </span>
+
+                    </div>
+
+
+                </div>
 
             </div>
 
 
 
-            <!-- CHAT -->
+            <!-- =================================
+                 FIXED CHAT HEADER
+            ================================== -->
+
+            <div
+                id="chatHeader"
+                class="chat-header-container"
+            >
+            </div>
+
+
+
+            <!-- =================================
+                 SCROLLABLE MESSAGES
+            ================================== -->
 
             <div
                 id="chat"
@@ -227,15 +519,14 @@
         </div>
 
 
-    </div>
+    </section>
+
+
+</div>
 
 
 
-    <!-- =========================================
-         JAVASCRIPT
-    ========================================== -->
-
-    <script src="script.js"></script>
+<script src="script.js"></script>
 
 
 </body>
