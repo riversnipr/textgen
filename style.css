@@ -7,16 +7,16 @@
     box-sizing: border-box;
 }
 
-html,
-body {
+html {
     width: 100%;
-    max-width: 100%;
-    margin: 0;
-    padding: 0;
     overflow-x: hidden;
 }
 
 body {
+    margin: 0;
+    width: 100%;
+    min-width: 0;
+
     background: #e9e9ee;
     color: #000;
 
@@ -27,6 +27,8 @@ body {
         "Helvetica Neue",
         Arial,
         sans-serif;
+
+    overflow-x: hidden;
 }
 
 
@@ -35,20 +37,19 @@ body {
 ========================================= */
 
 .app {
-    width: calc(100% - 32px);
-    max-width: 1000px;
+    width: min(1000px, calc(100% - 32px));
 
-    margin: 40px auto;
+    margin: 32px auto;
 }
 
 
 /* =========================================
-   HEADER
+   PAGE HEADER
 ========================================= */
 
 .app-header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 28px;
 }
 
 .app-header h1 {
@@ -62,8 +63,8 @@ body {
     margin: 0;
 
     color: #666;
-
     font-size: 15px;
+    line-height: 1.4;
 }
 
 
@@ -72,8 +73,6 @@ body {
 ========================================= */
 
 .input-section {
-    width: 100%;
-
     background: #fff;
 
     padding: 24px;
@@ -88,7 +87,7 @@ body {
 
 
 /* =========================================
-   LABELS
+   FORM ELEMENTS
 ========================================= */
 
 .name-input {
@@ -101,34 +100,31 @@ body {
 .setting-item label {
     display: block;
 
+    font-weight: 600;
+
     margin-bottom: 8px;
 
     font-size: 15px;
-
-    font-weight: 600;
 }
-
-
-/* =========================================
-   INPUTS
-========================================= */
 
 input,
 select {
     width: 100%;
-    max-width: 100%;
+    min-width: 0;
 
     padding: 12px 14px;
 
     border: 1px solid #ccc;
     border-radius: 10px;
 
-    background: #fff;
-
     font-family: inherit;
     font-size: 15px;
 
     outline: none;
+
+    background: #fff;
+
+    appearance: auto;
 }
 
 input:focus,
@@ -141,11 +137,15 @@ select:focus {
 
 
 /* =========================================
-   STATUS INPUT
+   MESSAGE STATUS
 ========================================= */
 
 .status-input {
     margin-bottom: 20px;
+}
+
+.status-input select {
+    cursor: pointer;
 }
 
 
@@ -154,8 +154,6 @@ select:focus {
 ========================================= */
 
 .phone-settings {
-    width: 100%;
-
     background: #f5f5f7;
 
     border: 1px solid #e1e1e5;
@@ -190,6 +188,7 @@ select:focus {
 }
 
 .battery-input input {
+    width: 100%;
     flex: 1;
 }
 
@@ -205,8 +204,6 @@ select:focus {
 ========================================= */
 
 .conversation-layout {
-    width: 100%;
-
     display: grid;
 
     grid-template-columns:
@@ -227,24 +224,25 @@ textarea {
     display: block;
 
     width: 100%;
-    max-width: 100%;
+    min-width: 0;
 
     min-height: 350px;
 
-    padding: 15px;
-
     resize: vertical;
 
-    border: 1px solid #ccc;
-    border-radius: 12px;
+    padding: 15px;
 
-    background: #fff;
+    border: 1px solid #ccc;
+
+    border-radius: 12px;
 
     font-family: monospace;
     font-size: 15px;
     line-height: 1.5;
 
     outline: none;
+
+    background: #fff;
 }
 
 textarea:focus {
@@ -260,8 +258,6 @@ textarea:focus {
 ========================================= */
 
 .instructions {
-    width: 100%;
-
     background: #f5f5f7;
 
     border: 1px solid #e1e1e5;
@@ -270,10 +266,11 @@ textarea:focus {
 
     padding: 18px;
 
-    color: #555;
-
     font-size: 13px;
+
     line-height: 1.5;
+
+    color: #555;
 }
 
 .instructions h3 {
@@ -292,6 +289,11 @@ textarea:focus {
     margin-bottom: 0;
 }
 
+
+/* =========================================
+   INSTRUCTION EXAMPLES
+========================================= */
+
 .instruction-example {
     background: #fff;
 
@@ -306,6 +308,7 @@ textarea:focus {
     color: #333;
 
     font-family: monospace;
+
     font-size: 12px;
 
     overflow-wrap: anywhere;
@@ -324,28 +327,38 @@ textarea:focus {
     padding: 14px;
 
     border: none;
+
     border-radius: 12px;
 
     background: #007aff;
 
     color: #fff;
 
-    font-family: inherit;
-
     font-size: 16px;
+
     font-weight: 600;
 
     cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        transform 0.1s ease;
+}
+
+#generateButton:hover {
+    background: #006fe6;
+}
+
+#generateButton:active {
+    transform: scale(0.99);
 }
 
 
 /* =========================================
-   PREVIEW
+   PREVIEW SECTION
 ========================================= */
 
 .preview-section {
-    width: 100%;
-
     background: #fff;
 
     border-radius: 18px;
@@ -359,10 +372,8 @@ textarea:focus {
 .preview-header {
     display: flex;
 
-    align-items: center;
     justify-content: space-between;
-
-    gap: 10px;
+    align-items: center;
 
     margin-bottom: 15px;
 }
@@ -373,9 +384,12 @@ textarea:focus {
     font-size: 24px;
 }
 
-.secondary-button {
-    flex-shrink: 0;
 
+/* =========================================
+   CLEAR BUTTON
+========================================= */
+
+.secondary-button {
     border: none;
 
     background: #eee;
@@ -386,16 +400,19 @@ textarea:focus {
 
     border-radius: 8px;
 
-    font-family: inherit;
-
-    font-size: 14px;
-
     cursor: pointer;
+
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.secondary-button:hover {
+    background: #e2e2e2;
 }
 
 
 /* =========================================
-   FAKE PHONE
+   CHAT WINDOW
 ========================================= */
 
 .chat-window {
@@ -408,16 +425,15 @@ textarea:focus {
 
     background: #fff;
 
-    border: 1px solid #eeeeee;
+    border: 1px solid #eee;
 
     border-radius: 14px;
 
     overflow: hidden;
 
     display: flex;
-    flex-direction: column;
 
-    position: relative;
+    flex-direction: column;
 }
 
 
@@ -426,77 +442,41 @@ textarea:focus {
 ========================================= */
 
 .phone-status-bar {
-    width: 100%;
-    max-width: 100%;
-
     height: 30px;
-    min-height: 30px;
 
-    flex: 0 0 30px;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 0 14px;
+    flex-shrink: 0;
 
     background: #fff;
 
-    font-size: 13px;
-    font-weight: 600;
-
-    line-height: 1;
-
-    overflow: hidden;
-}
-
-
-/* =========================================
-   TIME
-========================================= */
-
-.status-time {
-    flex: 0 0 auto;
-
-    width: auto;
-    min-width: 0;
-
     display: flex;
 
     align-items: center;
 
-    height: 100%;
+    justify-content: space-between;
 
-    white-space: nowrap;
+    padding: 0 15px;
 
     font-size: 13px;
+
+    font-weight: 600;
+
+    z-index: 3;
+}
+
+.status-time {
+    min-width: 45px;
 
     font-variant-numeric: tabular-nums;
 }
 
-
-/* =========================================
-   RIGHT ICONS
-========================================= */
-
 .status-icons {
-    flex: 0 0 auto;
-
-    width: auto;
-
-    height: 100%;
-
     display: flex;
 
     align-items: center;
 
-    justify-content: flex-end;
+    gap: 8px;
 
-    gap: 6px;
-
-    margin: 0;
-    padding: 0;
+    height: 100%;
 }
 
 
@@ -505,28 +485,22 @@ textarea:focus {
 ========================================= */
 
 .wifi-icon {
-    flex: 0 0 17px;
+    width: 22px;
+    height: 18px;
 
-    width: 17px;
-    height: 14px;
+    flex-shrink: 0;
 
     display: flex;
 
     align-items: center;
     justify-content: center;
-
-    margin: 0;
-    padding: 0;
 }
 
 .wifi-icon svg {
+    width: 22px;
+    height: 18px;
+
     display: block;
-
-    width: 17px !important;
-    height: 14px !important;
-
-    margin: 0;
-    padding: 0;
 }
 
 .wifi-icon path {
@@ -558,36 +532,22 @@ textarea:focus {
 ========================================= */
 
 .battery-display {
-    flex: 0 0 auto;
-
-    width: auto;
-
-    height: 14px;
-
     display: flex;
 
     align-items: center;
 
-    gap: 2px;
+    gap: 3px;
 
-    margin: 0;
-    padding: 0;
+    height: 17px;
 }
 
-
-/* =========================================
-   BATTERY BODY
-========================================= */
-
 .battery-body {
-    flex: 0 0 19px;
+    width: 23px;
+    height: 11px;
 
-    width: 19px;
-    height: 10px;
+    border: 1.5px solid #000;
 
-    border: 1.3px solid #000;
-
-    border-radius: 2.5px;
+    border-radius: 3px;
 
     padding: 1px;
 
@@ -595,7 +555,7 @@ textarea:focus {
 
     align-items: stretch;
 
-    overflow: hidden;
+    flex-shrink: 0;
 }
 
 .battery-fill {
@@ -604,38 +564,29 @@ textarea:focus {
     background: #000;
 
     border-radius: 1px;
+
+    transition:
+        width 0.2s ease,
+        background 0.2s ease;
 }
 
-
-/* =========================================
-   BATTERY TIP
-========================================= */
-
 .battery-tip {
-    flex: 0 0 2px;
-
     width: 2px;
     height: 5px;
 
     background: #000;
 
     border-radius: 0 2px 2px 0;
+
+    flex-shrink: 0;
 }
 
-
-/* =========================================
-   BATTERY TEXT
-========================================= */
-
 .battery-text {
-    flex: 0 0 auto;
+    font-size: 10px;
 
-    margin: 0;
-    padding: 0;
+    font-weight: 500;
 
-    font-size: 9px;
-
-    line-height: 1;
+    margin-left: 1px;
 
     white-space: nowrap;
 }
@@ -663,21 +614,19 @@ textarea:focus {
 ========================================= */
 
 .chat-header-container {
-    width: 100%;
-
-    flex: 0 0 auto;
+    flex-shrink: 0;
 
     background: #fff;
 
-    border-bottom: 1px solid #eeeeee;
+    z-index: 2;
+
+    border-bottom: 1px solid #eee;
 }
 
 .chat-header {
-    width: 100%;
+    text-align: center;
 
     padding: 10px 0 14px;
-
-    text-align: center;
 
     background: #fff;
 }
@@ -700,41 +649,46 @@ textarea:focus {
     justify-content: center;
 
     font-size: 17px;
+
+    font-weight: 500;
 }
 
 .chat-contact-name {
-    padding: 0 15px;
-
     font-size: 16px;
+
     font-weight: 500;
 
     overflow-wrap: anywhere;
+
+    padding: 0 15px;
 }
 
 
 /* =========================================
-   CHAT
+   CHAT AREA
 ========================================= */
 
 .chat {
-    flex: 1 1 auto;
+    flex: 1;
 
-    min-width: 0;
     min-height: 0;
 
     width: 100%;
 
+    background: #fff;
+
     padding: 12px 10px 35px;
 
     display: flex;
+
     flex-direction: column;
 
     gap: 4px;
 
-    overflow-x: hidden;
     overflow-y: auto;
+    overflow-x: hidden;
 
-    background: #fff;
+    scroll-behavior: smooth;
 
     -webkit-overflow-scrolling: touch;
 }
@@ -758,22 +712,27 @@ textarea:focus {
     border-radius: 10px;
 }
 
+.chat::-webkit-scrollbar-thumb:hover {
+    background: #aeaeb2;
+}
+
 
 /* =========================================
-   TIMESTAMP
+   TIMESTAMPS
 ========================================= */
 
 .timestamp {
-    flex-shrink: 0;
-
-    margin: 12px 0 7px;
-
     text-align: center;
 
     color: #999;
 
     font-size: 11px;
+
     font-weight: 500;
+
+    margin: 12px 0 7px;
+
+    flex-shrink: 0;
 }
 
 
@@ -786,9 +745,9 @@ textarea:focus {
 
     width: 100%;
 
-    flex-shrink: 0;
-
     margin: 1px 0;
+
+    flex-shrink: 0;
 }
 
 .message-row.left {
@@ -801,15 +760,13 @@ textarea:focus {
 
 
 /* =========================================
-   MESSAGE
+   MESSAGE BUBBLE
 ========================================= */
 
 .message {
     max-width: 84%;
 
     padding: 8px 13px;
-
-    border-radius: 20px;
 
     font-size: 17px;
 
@@ -819,28 +776,56 @@ textarea:focus {
     overflow-wrap: anywhere;
 
     white-space: pre-wrap;
+
+    border-radius: 20px;
 }
 
-.message-row.left .message {
-    background: #e5e5ea;
 
-    color: #000;
-}
+/* =========================================
+   BLUE / RIGHT
+========================================= */
 
 .message-row.right .message {
     background: #0a84ff;
 
     color: #fff;
+
+    border-radius: 20px;
 }
 
 
 /* =========================================
-   REMOVE TAILS
+   GRAY / LEFT
+========================================= */
+
+.message-row.left .message {
+    background: #e5e5ea;
+
+    color: #000;
+
+    border-radius: 20px;
+}
+
+
+/* =========================================
+   GROUP POSITIONS
+========================================= */
+
+.message-row.first-in-group .message,
+.message-row.middle-in-group .message,
+.message-row.last-in-group .message {
+    border-radius: 20px;
+}
+
+
+/* =========================================
+   NO TAILS
 ========================================= */
 
 .message-row .message::before,
 .message-row .message::after {
     content: none !important;
+
     display: none !important;
 }
 
@@ -850,50 +835,58 @@ textarea:focus {
 ========================================= */
 
 .message-status-row {
-    width: 100%;
-
     display: flex;
 
     justify-content: flex-end;
 
+    width: 100%;
+
     padding-right: 3px;
 
-    margin: 1px 0 3px;
+    margin-top: 1px;
+    margin-bottom: 3px;
+
+    flex-shrink: 0;
 }
 
 .message-status {
     color: #8e8e93;
 
     font-size: 11px;
+
+    line-height: 1.2;
+
+    font-weight: 400;
 }
 
 
 /* =========================================
-   EMPTY MESSAGE
+   EMPTY STATE
 ========================================= */
 
 .empty-message {
+    color: #999;
+
+    text-align: center;
+
     margin: auto;
 
     padding: 40px 20px;
 
-    text-align: center;
-
-    color: #999;
-
     font-size: 14px;
+
+    line-height: 1.4;
 }
 
 
 /* =========================================
-   TABLET
+   TABLET / SMALL DESKTOP
 ========================================= */
 
 @media (max-width: 800px) {
 
     .app {
-        width: 94%;
-        max-width: 700px;
+        width: min(94%, 700px);
 
         margin: 24px auto;
     }
@@ -905,6 +898,7 @@ textarea:focus {
     .instructions {
         order: 2;
     }
+
 }
 
 
@@ -918,18 +912,15 @@ textarea:focus {
     body {
         width: 100%;
         max-width: 100%;
-
-        overflow-x: hidden;
     }
 
 
     /* -----------------------------------------
-       APP
+       MAIN APP
     ----------------------------------------- */
 
     .app {
         width: 100%;
-        max-width: 100%;
 
         margin: 0;
     }
@@ -940,8 +931,6 @@ textarea:focus {
     ----------------------------------------- */
 
     .app-header {
-        width: 100%;
-
         padding: 25px 18px 20px;
 
         margin: 0;
@@ -949,20 +938,25 @@ textarea:focus {
 
     .app-header h1 {
         font-size: 26px;
+
+        line-height: 1.15;
+
+        margin-bottom: 8px;
     }
 
     .app-header p {
         font-size: 14px;
+
+        line-height: 1.4;
     }
 
 
     /* -----------------------------------------
-       INPUT
+       INPUT CARD
     ----------------------------------------- */
 
     .input-section {
         width: 100%;
-        max-width: 100%;
 
         padding: 20px 16px 22px;
 
@@ -976,14 +970,65 @@ textarea:focus {
         border-bottom: 1px solid #ddd;
     }
 
+
+    /* -----------------------------------------
+       FORM INPUTS
+    ----------------------------------------- */
+
+    .name-input {
+        margin-bottom: 15px;
+    }
+
+    .name-input label,
+    .dialogue-input label,
+    .status-input label,
+    .setting-item label {
+        font-size: 14px;
+
+        margin-bottom: 7px;
+    }
+
     input,
     select {
-        width: 100%;
-        max-width: 100%;
-
         min-height: 46px;
 
+        padding: 11px 13px;
+
         font-size: 16px;
+
+        border-radius: 10px;
+    }
+
+
+    /* -----------------------------------------
+       STATUS
+    ----------------------------------------- */
+
+    .status-input {
+        margin-bottom: 18px;
+    }
+
+
+    /* -----------------------------------------
+       PHONE SETTINGS
+    ----------------------------------------- */
+
+    .phone-settings {
+        padding: 15px;
+
+        margin-bottom: 20px;
+
+        border-radius: 13px;
+    }
+
+    .phone-settings h3 {
+        margin-bottom: 13px;
+
+        font-size: 15px;
+    }
+
+    .setting-item {
+        margin-bottom: 12px;
     }
 
 
@@ -992,21 +1037,77 @@ textarea:focus {
     ----------------------------------------- */
 
     .conversation-layout {
-        width: 100%;
-        max-width: 100%;
-
         display: flex;
 
         flex-direction: column;
 
         gap: 18px;
+
+        width: 100%;
+    }
+
+    .dialogue-input {
+        width: 100%;
     }
 
     textarea {
         width: 100%;
-        max-width: 100%;
 
         min-height: 300px;
+
+        max-height: 55vh;
+
+        padding: 13px;
+
+        font-size: 15px;
+
+        border-radius: 11px;
+
+        resize: vertical;
+    }
+
+
+    /* -----------------------------------------
+       INSTRUCTIONS
+    ----------------------------------------- */
+
+    .instructions {
+        width: 100%;
+
+        padding: 16px;
+
+        border-radius: 13px;
+
+        font-size: 13px;
+    }
+
+    .instructions h3 {
+        font-size: 15px;
+
+        margin-bottom: 11px;
+    }
+
+    .instructions p {
+        margin-bottom: 11px;
+    }
+
+
+    /* -----------------------------------------
+       GENERATE BUTTON
+    ----------------------------------------- */
+
+    #generateButton {
+        min-height: 50px;
+
+        margin-top: 18px;
+
+        padding: 13px;
+
+        border-radius: 11px;
+
+        font-size: 16px;
+
+        -webkit-tap-highlight-color: transparent;
     }
 
 
@@ -1016,40 +1117,39 @@ textarea:focus {
 
     .preview-section {
         width: 100%;
-        max-width: 100%;
 
         padding: 18px 0 0;
 
         border-radius: 0;
 
         box-shadow: none;
-
-        overflow: hidden;
     }
 
     .preview-header {
-        width: 100%;
-        max-width: 100%;
-
         padding: 0 16px;
 
         margin-bottom: 12px;
     }
 
+    .preview-header h2 {
+        font-size: 22px;
+    }
 
-    /* =========================================
+    .secondary-button {
+        min-height: 38px;
+
+        padding: 8px 14px;
+
+        font-size: 14px;
+    }
+
+
+    /* -----------------------------------------
        PHONE PREVIEW
-
-       IMPORTANT:
-       width is explicitly 100vw,
-       but max-width is 100%.
-       No negative margins.
-       No extra padding.
-       ========================================= */
+    ----------------------------------------- */
 
     .chat-window {
         width: 100%;
-
         max-width: 100%;
 
         height: 650px;
@@ -1061,145 +1161,21 @@ textarea:focus {
 
         border-radius: 0;
 
-        overflow: hidden;
+        border-top: 1px solid #eee;
+        border-bottom: 1px solid #eee;
     }
 
 
-    /* =========================================
-       STATUS BAR
-    ========================================= */
+    /* -----------------------------------------
+       PHONE STATUS BAR
+    ----------------------------------------- */
 
     .phone-status-bar {
-        width: 100%;
-        max-width: 100%;
+        height: 30px;
 
-        height: 28px;
-        min-height: 28px;
-        max-height: 28px;
+        padding: 0 15px;
 
-        flex: 0 0 28px;
-
-        padding: 0 14px;
-
-        display: flex;
-
-        flex-direction: row;
-
-        align-items: center;
-
-        justify-content: space-between;
-
-        overflow: hidden;
-    }
-
-
-    /* -----------------------------------------
-       TIME
-    ----------------------------------------- */
-
-    .status-time {
-        flex: 0 0 auto;
-
-        width: auto;
-        min-width: 0;
-
-        font-size: 12px;
-
-        white-space: nowrap;
-    }
-
-
-    /* -----------------------------------------
-       ICONS
-    ----------------------------------------- */
-
-    .status-icons {
-        flex: 0 0 auto;
-
-        width: auto;
-
-        height: 100%;
-
-        display: flex;
-
-        flex-direction: row;
-
-        align-items: center;
-
-        justify-content: flex-end;
-
-        gap: 5px;
-
-        margin: 0;
-        padding: 0;
-    }
-
-
-    /* -----------------------------------------
-       WIFI
-    ----------------------------------------- */
-
-    .wifi-icon {
-        flex: 0 0 16px;
-
-        width: 16px;
-        height: 13px;
-
-        min-width: 16px;
-        max-width: 16px;
-
-        min-height: 13px;
-        max-height: 13px;
-    }
-
-    .wifi-icon svg {
-        width: 16px !important;
-        height: 13px !important;
-
-        min-width: 16px;
-        max-width: 16px;
-
-        min-height: 13px;
-        max-height: 13px;
-    }
-
-
-    /* -----------------------------------------
-       BATTERY
-    ----------------------------------------- */
-
-    .battery-display {
-        height: 13px;
-
-        gap: 2px;
-    }
-
-    .battery-body {
-        flex: 0 0 18px;
-
-        width: 18px;
-        height: 9px;
-
-        min-width: 18px;
-        max-width: 18px;
-
-        min-height: 9px;
-        max-height: 9px;
-
-        border-width: 1.2px;
-
-        padding: 1px;
-    }
-
-    .battery-tip {
-        flex: 0 0 2px;
-
-        width: 2px;
-        height: 4px;
-    }
-
-    .battery-text {
-        font-size: 8px;
+        font-size: 13px;
     }
 
 
@@ -1216,6 +1192,8 @@ textarea:focus {
         height: 48px;
 
         margin-bottom: 6px;
+
+        font-size: 16px;
     }
 
     .chat-contact-name {
@@ -1228,15 +1206,14 @@ textarea:focus {
     ----------------------------------------- */
 
     .chat {
-        width: 100%;
-        max-width: 100%;
-
         padding: 12px 10px 30px;
+
+        gap: 4px;
     }
 
 
     /* -----------------------------------------
-       MESSAGES
+       MESSAGE BUBBLES
     ----------------------------------------- */
 
     .message {
@@ -1248,6 +1225,7 @@ textarea:focus {
 
         line-height: 1.22;
     }
+
 }
 
 
@@ -1262,12 +1240,11 @@ textarea:focus {
         padding-right: 14px;
     }
 
-    .input-section {
-        padding-left: 13px;
-        padding-right: 13px;
+    .app-header h1 {
+        font-size: 23px;
     }
 
-    .preview-header {
+    .input-section {
         padding-left: 13px;
         padding-right: 13px;
     }
@@ -1276,11 +1253,38 @@ textarea:focus {
         max-width: 85%;
 
         font-size: 16px;
+
+        padding: 8px 11px;
     }
 
     .chat {
         padding-left: 8px;
         padding-right: 8px;
     }
+
+}
+
+
+/* =========================================
+   TOUCH DEVICES
+========================================= */
+
+@media (hover: none) and (pointer: coarse) {
+
+    #generateButton:hover {
+        background: #007aff;
+    }
+
+    .secondary-button:hover {
+        background: #eee;
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+        -webkit-tap-highlight-color: transparent;
+    }
+
 }
 ```
