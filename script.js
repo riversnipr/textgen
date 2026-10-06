@@ -1,31 +1,18 @@
-const dialogueInput =
-    document.getElementById("dialogue");
+/* =========================================================
+   TEXT CONVERSATION GENERATOR
+   COMPLETE REDESIGN JAVASCRIPT
+========================================================= */
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
 
 const recipientInput =
     document.getElementById("recipient");
 
 const senderInput =
     document.getElementById("sender");
-
-const generateButton =
-    document.getElementById("generateButton");
-
-const clearButton =
-    document.getElementById("clearButton");
-
-const chat =
-    document.getElementById("chat");
-
-const chatHeader =
-    document.getElementById("chatHeader");
-
-const messageStatusInput =
-    document.getElementById("messageStatus");
-
-
-/* =========================================
-   STATUS BAR ELEMENTS
-========================================= */
 
 const phoneTimeInput =
     document.getElementById("phoneTime");
@@ -36,6 +23,21 @@ const wifiStrengthInput =
 const batteryLevelInput =
     document.getElementById("batteryLevel");
 
+const batteryValue =
+    document.getElementById("batteryValue");
+
+const messageStatusInput =
+    document.getElementById("messageStatus");
+
+const messageInput =
+    document.getElementById("messageInput");
+
+const generateButton =
+    document.getElementById("generateButton");
+
+const clearButton =
+    document.getElementById("clearButton");
+
 const previewTime =
     document.getElementById("previewTime");
 
@@ -45,511 +47,121 @@ const previewWifi =
 const batteryFill =
     document.getElementById("batteryFill");
 
-const previewBatteryText =
-    document.getElementById(
-        "previewBatteryText"
-    );
+const contactAvatar =
+    document.getElementById("contactAvatar");
+
+const contactName =
+    document.getElementById("contactName");
+
+const chat =
+    document.getElementById("chat");
+
+const messagesScroll =
+    document.getElementById("messagesScroll");
 
 
-/* =========================================
-   GENERATE CONVERSATION
-========================================= */
 
-function generateConversation() {
+/* =========================================================
+   INITIALIZE
+========================================================= */
 
-    const recipient =
+document.addEventListener("DOMContentLoaded", () => {
+
+    updatePhoneSettings();
+
+    updateContact();
+
+       generateConversation();
+
+});
+
+
+/* =========================================================
+   CONTACT
+========================================================= */
+
+function updateContact() {
+
+    let name =
         recipientInput.value.trim();
 
-    const sender =
-        senderInput.value.trim();
-
-    const text =
-        dialogueInput.value.trim();
-
-    const messageStatus =
-        messageStatusInput
-            ? messageStatusInput.value
-            : "none";
-
-
-    /* =========================================
-       CHECK INPUTS
-    ========================================= */
-
-    if (recipient === "") {
-
-        alert(
-            "Please enter the name of the person being texted."
-        );
-
-        return;
+    if (name === "") {
+        name = "John";
     }
 
+    contactName.textContent = name;
 
-    if (sender === "") {
-
-        alert(
-            "Please enter the name of the person doing the texting."
-        );
-
-        return;
-    }
-
-
-    if (text === "") {
-
-        alert(
-            "Please enter a conversation."
-        );
-
-        return;
-    }
-
-
-    /* =========================================
-       CLEAR PREVIOUS CHAT
-    ========================================= */
-
-    chat.innerHTML = "";
-
-    chatHeader.innerHTML = "";
-
-
-    /* =========================================
-       UPDATE STATUS BAR
-    ========================================= */
-
-    updateStatusBar();
-
-
-    /* =========================================
-       CREATE CHAT HEADER
-    ========================================= */
-
-    createChatHeader(recipient);
-
-
-    /* =========================================
-       READ CONVERSATION
-    ========================================= */
-
-    const lines =
-        text.split("\n");
-
-
-    const messages = [];
-
-
-    lines.forEach(line => {
-
-        line = line.trim();
-
-
-        /* =====================================
-           IGNORE EMPTY LINES
-        ===================================== */
-
-        if (line === "") {
-
-            return;
-
-        }
-
-
-        /* =====================================
-           CHECK FOR TIMESTAMP
-        ===================================== */
-
-        const timeMatch =
-            line.match(
-                /^\[TIME:\s*(.*?)\s*\]$/i
-            );
-
-
-        if (timeMatch) {
-
-            messages.push({
-
-                type: "timestamp",
-
-                text: timeMatch[1]
-
-            });
-
-            return;
-
-        }
-
-
-        /* =====================================
-           CHECK FOR MESSAGE
-        ===================================== */
-
-        const colonIndex =
-            line.indexOf(":");
-
-
-        if (colonIndex === -1) {
-
-            return;
-
-        }
-
-
-        const speaker =
-            line
-                .substring(0, colonIndex)
-                .trim();
-
-
-        const message =
-            line
-                .substring(colonIndex + 1)
-                .trim();
-
-
-        if (
-            speaker === "" ||
-            message === ""
-        ) {
-
-            return;
-
-        }
-
-
-        messages.push({
-
-            type: "message",
-
-            speaker: speaker,
-
-            message: message
-
-        });
-
-    });
-
-
-    /* =========================================
-       CHECK FOR VALID CONTENT
-    ========================================= */
-
-    if (messages.length === 0) {
-
-        alert(
-            "No valid messages were found.\n\nUse the format:\nName: Message"
-        );
-
-        return;
-    }
-
-
-    /* =========================================
-       FIND MOST RECENT SENDER MESSAGE
-    ========================================= */
-
-    let mostRecentSenderMessageIndex =
-        -1;
-
-
-    for (
-        let i = messages.length - 1;
-        i >= 0;
-        i--
-    ) {
-
-        if (
-            messages[i].type === "message" &&
-            messages[i].speaker
-                .trim()
-                .toLowerCase() ===
-            sender.toLowerCase()
-        ) {
-
-            mostRecentSenderMessageIndex =
-                i;
-
-            break;
-
-        }
-
-    }
-
-
-    /* =========================================
-       CREATE CHAT CONTENT
-    ========================================= */
-
-    messages.forEach(
-        (item, index) => {
-
-
-            /* =================================
-               TIMESTAMP
-            ================================= */
-
-            if (
-                item.type ===
-                "timestamp"
-            ) {
-
-                createTimestamp(
-                    item.text
-                );
-
-                return;
-
-            }
-
-
-            /* =================================
-               CURRENT SPEAKER
-            ================================= */
-
-            const currentSpeaker =
-                item.speaker
-                    .trim()
-                    .toLowerCase();
-
-
-            /* =================================
-               FIND PREVIOUS MESSAGE
-            ================================= */
-
-            let previousMessage =
-                null;
-
-
-            for (
-                let i = index - 1;
-                i >= 0;
-                i--
-            ) {
-
-                if (
-                    messages[i].type ===
-                    "message"
-                ) {
-
-                    previousMessage =
-                        messages[i];
-
-                    break;
-
-                }
-
-            }
-
-
-            /* =================================
-               FIND NEXT MESSAGE
-            ================================= */
-
-            let nextMessage =
-                null;
-
-
-            for (
-                let i = index + 1;
-                i < messages.length;
-                i++
-            ) {
-
-                if (
-                    messages[i].type ===
-                    "message"
-                ) {
-
-                    nextMessage =
-                        messages[i];
-
-                    break;
-
-                }
-
-            }
-
-
-            /* =================================
-               DETERMINE SIDE
-            ================================= */
-
-            let side;
-
-
-            if (
-                currentSpeaker ===
-                sender.toLowerCase()
-            ) {
-
-                side = "right";
-
-            }
-
-
-            else if (
-                currentSpeaker ===
-                recipient.toLowerCase()
-            ) {
-
-                side = "left";
-
-            }
-
-
-            else {
-
-                side = "left";
-
-            }
-
-
-            /* =================================
-               DETERMINE GROUP
-            ================================= */
-
-            const previousSpeaker =
-                previousMessage
-                    ? previousMessage.speaker
-                        .trim()
-                        .toLowerCase()
-                    : null;
-
-
-            const nextSpeaker =
-                nextMessage
-                    ? nextMessage.speaker
-                        .trim()
-                        .toLowerCase()
-                    : null;
-
-
-            const isFirstInGroup =
-                currentSpeaker !==
-                previousSpeaker;
-
-
-            const isLastInGroup =
-                currentSpeaker !==
-                nextSpeaker;
-
-
-            /* =================================
-               CHECK MESSAGE STATUS
-            ================================= */
-
-            const isMostRecentSenderMessage =
-                index ===
-                mostRecentSenderMessageIndex;
-
-
-            let status = "";
-
-
-            if (
-                isMostRecentSenderMessage &&
-                messageStatus !== "none"
-            ) {
-
-                status =
-                    messageStatus;
-
-            }
-
-
-            /* =================================
-               CREATE MESSAGE
-            ================================= */
-
-            createMessage(
-
-                item.message,
-
-                side,
-
-                isFirstInGroup,
-
-                isLastInGroup,
-
-                status
-
-            );
-
-        }
-    );
-
-
-    /* =========================================
-       SCROLL TO BOTTOM
-    ========================================= */
-
-    setTimeout(() => {
-
-        chat.scrollTop =
-            chat.scrollHeight;
-
-    }, 10);
-
+    contactAvatar.textContent =
+        getInitials(name);
 }
 
 
-/* =========================================
-   UPDATE STATUS BAR
-========================================= */
+/* =========================================================
+   INITIALS
+========================================================= */
 
-function updateStatusBar() {
+function getInitials(name) {
 
-    /* =====================================
-       TIME
-    ===================================== */
+    const words =
+        name
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean);
+
+    if (words.length === 0) {
+        return "?";
+    }
+
+    if (words.length === 1) {
+
+        return words[0]
+            .substring(0, 2)
+            .toUpperCase();
+
+    }
+
+    return (
+        words[0][0] +
+        words[words.length - 1][0]
+    ).toUpperCase();
+}
+
+
+/* =========================================================
+   PHONE SETTINGS
+========================================================= */
+
+function updatePhoneSettings() {
+
+    /* Time */
 
     let time =
         phoneTimeInput.value.trim();
 
-
     if (time === "") {
-
-        time = "9:41";
-
+        time = "9:41 AM";
     }
 
-
-    previewTime.textContent =
-        time;
+    previewTime.textContent = time;
 
 
-    /* =====================================
-       WIFI
-    ===================================== */
+    /* Wi-Fi */
 
     const wifi =
         wifiStrengthInput.value;
 
-
     previewWifi.classList.remove(
-
         "off",
-
         "weak",
-
         "medium",
-
         "strong",
-
         "full"
-
     );
 
-
-    previewWifi.classList.add(
-        wifi
-    );
+    previewWifi.classList.add(wifi);
 
 
-    /* =====================================
-       BATTERY
-    ===================================== */
+    /* Battery */
 
     let battery =
         parseInt(
@@ -557,420 +169,541 @@ function updateStatusBar() {
             10
         );
 
-
-    if (
-        isNaN(battery)
-    ) {
-
+    if (Number.isNaN(battery)) {
         battery = 87;
-
     }
-
 
     battery =
         Math.max(
             0,
-            Math.min(
-                100,
-                battery
-            )
+            Math.min(100, battery)
         );
-
 
     batteryLevelInput.value =
         battery;
 
+    batteryValue.textContent =
+        battery + "%";
 
     batteryFill.style.width =
-        battery + "%";
+        Math.max(0, battery - 4) + "%";
 
 
-    previewBatteryText.textContent =
-        battery + "%";
-
-
-    /* =====================================
-       BATTERY COLOR
-    ===================================== */
+    /* Battery appearance */
 
     batteryFill.classList.remove(
-
         "low",
-
         "medium",
-
         "normal"
-
     );
-
 
     if (battery <= 20) {
 
-        batteryFill.classList.add(
-            "low"
-        );
+        batteryFill.classList.add("low");
+
+    } else if (battery <= 40) {
+
+        batteryFill.classList.add("medium");
+
+    } else {
+
+        batteryFill.classList.add("normal");
 
     }
-
-    else if (battery <= 40) {
-
-        batteryFill.classList.add(
-            "medium"
-        );
-
-    }
-
-    else {
-
-        batteryFill.classList.add(
-            "normal"
-        );
-
-    }
-
 }
 
 
-/* =========================================
-   CREATE CHAT HEADER
-========================================= */
+/* =========================================================
+   PARSE CONVERSATION
+========================================================= */
 
-function createChatHeader(name) {
+function parseConversation(text) {
 
-    const header =
-        document.createElement("div");
+    const lines =
+        text.split(/\r?\n/);
 
+    const items = [];
 
-    header.classList.add(
-        "chat-header"
-    );
+    for (let line of lines) {
 
+        line =
+            line.trim();
 
-    /* =====================================
-       AVATAR
-    ===================================== */
-
-    const avatar =
-        document.createElement("div");
+        if (line === "") {
+            continue;
+        }
 
 
-    avatar.classList.add(
-        "chat-avatar"
-    );
+        /* -----------------------------------------
+           TIME SEPARATOR
+        ------------------------------------------ */
+
+        const timeMatch =
+            line.match(
+                /^\[TIME:\s*(.*?)\s*\]$/i
+            );
+
+        if (timeMatch) {
+
+            items.push({
+                type: "time",
+                text: timeMatch[1]
+            });
+
+            continue;
+        }
 
 
-    const words =
-        name.split(" ");
+        /* -----------------------------------------
+           MESSAGE
+        ------------------------------------------ */
+
+        const colonIndex =
+            line.indexOf(":");
 
 
-    let initials = "";
+        if (colonIndex === -1) {
+
+            items.push({
+                type: "message",
+                name: "",
+                text: line
+            });
+
+            continue;
+        }
+
+
+        const name =
+            line
+                .substring(0, colonIndex)
+                .trim();
+
+        const message =
+            line
+                .substring(colonIndex + 1)
+                .trim();
+
+
+        if (message === "") {
+            continue;
+        }
+
+
+        items.push({
+            type: "message",
+            name: name,
+            text: message
+        });
+    }
+
+    return items;
+}
+
+
+/* =========================================================
+   DETERMINE MESSAGE SIDE
+========================================================= */
+
+function isSentMessage(name) {
+
+    const sender =
+        senderInput.value
+            .trim()
+            .toLowerCase();
+
+    const recipient =
+        recipientInput.value
+            .trim()
+            .toLowerCase();
+
+    const messageName =
+        name
+            .trim()
+            .toLowerCase();
 
 
     if (
-        words.length === 1
+        sender !== "" &&
+        messageName === sender
     ) {
-
-        initials =
-            words[0]
-                .substring(0, 2);
-
+        return true;
     }
 
 
-    else {
-
-        initials =
-            words[0][0] +
-            words[words.length - 1][0];
-
+    if (
+        recipient !== "" &&
+        messageName === recipient
+    ) {
+        return false;
     }
 
 
-    avatar.textContent =
-        initials.toUpperCase();
+    /*
+       If the name isn't an exact match,
+       make a few useful comparisons.
+    */
+
+    if (
+        sender !== "" &&
+        messageName.includes(sender)
+    ) {
+        return true;
+    }
+
+    if (
+        recipient !== "" &&
+        messageName.includes(recipient)
+    ) {
+        return false;
+    }
 
 
-    /* =====================================
-       CONTACT NAME
-    ===================================== */
+    /*
+       Unknown names default to received.
+    */
 
-    const contactName =
-        document.createElement("div");
-
-
-    contactName.classList.add(
-        "chat-contact-name"
-    );
-
-
-    contactName.textContent =
-        name;
-
-
-    /* =====================================
-       ADD TO HEADER
-    ===================================== */
-
-    header.appendChild(
-        avatar
-    );
-
-
-    header.appendChild(
-        contactName
-    );
-
-
-    chatHeader.appendChild(
-        header
-    );
-
+    return false;
 }
 
 
-/* =========================================
-   CREATE MESSAGE
-========================================= */
+/* =========================================================
+   CREATE MESSAGE BUBBLE
+========================================================= */
 
 function createMessage(
-    messageText,
-    side,
-    isFirstInGroup,
-    isLastInGroup,
-    status
+    item,
+    index,
+    items
 ) {
 
     const row =
         document.createElement("div");
 
+    row.className =
+        "message-row";
+
+
+    const sent =
+        isSentMessage(item.name);
+
 
     row.classList.add(
-        "message-row",
-        side
+        sent ? "sent" : "received"
     );
 
 
-    /* =====================================
-       GROUP CLASSES
-    ===================================== */
+    /* -----------------------------------------
+       GROUPING
+    ------------------------------------------ */
 
-    if (
-        isFirstInGroup
-    ) {
-
-        row.classList.add(
-            "first-in-group"
+    const previous =
+        findPreviousMessage(
+            items,
+            index
         );
 
+    const next =
+        findNextMessage(
+            items,
+            index
+        );
+
+
+    if (
+        previous &&
+        isSentMessage(previous.name) === sent
+    ) {
+        row.classList.add("grouped");
     }
 
 
     if (
-        isLastInGroup
+        !next ||
+        isSentMessage(next.name) !== sent
     ) {
-
-        row.classList.add(
-            "last-in-group"
-        );
-
+        row.classList.add("last-in-group");
     }
 
 
-    if (
-        !isFirstInGroup &&
-        !isLastInGroup
-    ) {
-
-        row.classList.add(
-            "middle-in-group"
-        );
-
-    }
-
-
-    /* =====================================
-       CREATE BUBBLE
-    ===================================== */
+    /* -----------------------------------------
+       Bubble
+    ------------------------------------------ */
 
     const bubble =
         document.createElement("div");
 
-
-    bubble.classList.add(
-        "message"
-    );
-
+    bubble.className =
+        "message-bubble";
 
     bubble.textContent =
-        messageText;
+        item.text;
 
 
-    row.appendChild(
-        bubble
-    );
+    row.appendChild(bubble);
+
+    return row;
+}
 
 
-    chat.appendChild(
-        row
-    );
+/* =========================================================
+   FIND PREVIOUS MESSAGE
+========================================================= */
 
+function findPreviousMessage(
+    items,
+    index
+) {
 
-    /* =====================================
-       MESSAGE STATUS
-    ===================================== */
-
-    if (
-        status !== "" &&
-        side === "right"
+    for (
+        let i = index - 1;
+        i >= 0;
+        i--
     ) {
 
-        const statusRow =
+        if (
+            items[i].type === "message"
+        ) {
+            return items[i];
+        }
+
+        if (
+            items[i].type === "time"
+        ) {
+            break;
+        }
+    }
+
+    return null;
+}
+
+
+/* =========================================================
+   FIND NEXT MESSAGE
+========================================================= */
+
+function findNextMessage(
+    items,
+    index
+) {
+
+    for (
+        let i = index + 1;
+        i < items.length;
+        i++
+    ) {
+
+        if (
+            items[i].type === "message"
+        ) {
+            return items[i];
+        }
+
+        if (
+            items[i].type === "time"
+        ) {
+            break;
+        }
+    }
+
+    return null;
+}
+
+
+/* =========================================================
+   GENERATE CONVERSATION
+========================================================= */
+
+function generateConversation() {
+
+    updatePhoneSettings();
+
+    updateContact();
+
+
+    const text =
+        messageInput.value.trim();
+
+
+    /* Clear current conversation */
+
+    chat.innerHTML = "";
+
+
+    if (text === "") {
+
+        createEmptyMessage();
+
+        return;
+    }
+
+
+    const items =
+        parseConversation(text);
+
+
+    if (items.length === 0) {
+
+        createEmptyMessage();
+
+        return;
+    }
+
+
+    let lastSentMessage = null;
+
+
+    items.forEach(
+        (item, index) => {
+
+            if (item.type === "time") {
+
+                createTimeSeparator(
+                    item.text
+                );
+
+            } else {
+
+                const message =
+                    createMessage(
+                        item,
+                        index,
+                        items
+                    );
+
+                chat.appendChild(message);
+
+
+                /*
+                   Keep track of the most recent
+                   message sent by the user.
+                */
+
+                if (
+                    isSentMessage(item.name)
+                ) {
+
+                    lastSentMessage =
+                        message;
+
+                }
+
+            }
+
+        }
+    );
+
+
+    /* -----------------------------------------
+       ADD DELIVERED / READ STATUS
+    ------------------------------------------ */
+
+    const status =
+        messageStatusInput.value;
+
+
+    if (
+        lastSentMessage &&
+        status !== "none"
+    ) {
+
+        const statusElement =
             document.createElement("div");
 
+        statusElement.className =
+            "message-status";
 
-        statusRow.classList.add(
-            "message-status-row"
-        );
-
-
-        const statusText =
-            document.createElement("div");
-
-
-        statusText.classList.add(
-            "message-status"
-        );
-
-
-        statusText.textContent =
+        statusElement.textContent =
             status === "read"
                 ? "Read"
                 : "Delivered";
 
 
-        statusRow.appendChild(
-            statusText
+        /*
+           Put the status immediately
+           underneath the last outgoing
+           message.
+        */
+
+        lastSentMessage.after(
+            statusElement
         );
-
-
-        chat.appendChild(
-            statusRow
-        );
-
     }
 
+
+    /*
+       Scroll to the newest message.
+    */
+
+    requestAnimationFrame(() => {
+
+        messagesScroll.scrollTop =
+            messagesScroll.scrollHeight;
+
+    });
 }
 
+/* =========================================================
+   TIME SEPARATOR
+========================================================= */
 
-/* =========================================
-   CREATE TIMESTAMP
-========================================= */
+function createTimeSeparator(text) {
 
-function createTimestamp(text) {
-
-    const timestamp =
+    const separator =
         document.createElement("div");
 
+    separator.className =
+        "time-separator";
 
-    timestamp.classList.add(
-        "timestamp"
-    );
-
-
-    timestamp.textContent =
+    separator.textContent =
         text;
 
-
-    chat.appendChild(
-        timestamp
-    );
-
+    chat.appendChild(separator);
 }
 
 
-/* =========================================
-   CLEAR CONVERSATION
-========================================= */
+/* =========================================================
+   EMPTY MESSAGE
+========================================================= */
+
+function createEmptyMessage() {
+
+    const empty =
+        document.createElement("div");
+
+    empty.className =
+        "empty-message";
+
+    empty.innerHTML = `
+        <div class="empty-icon">💬</div>
+        <strong>Your conversation</strong>
+        <span>will appear here.</span>
+    `;
+
+    chat.appendChild(empty);
+}
+
+
+/* =========================================================
+   CLEAR
+========================================================= */
 
 function clearConversation() {
 
-    recipientInput.value =
-        "";
+    messageInput.value = "";
 
-    senderInput.value =
-        "";
+    chat.innerHTML = "";
 
-    dialogueInput.value =
-        "";
-
-
-    if (
-        messageStatusInput
-    ) {
-
-        messageStatusInput.value =
-            "none";
-
-    }
-
-
-    phoneTimeInput.value =
-        "9:41";
-
-
-    wifiStrengthInput.value =
-        "full";
-
-
-    batteryLevelInput.value =
-        "87";
-
-
-    updateStatusBar();
-
-
-    chatHeader.innerHTML =
-        "";
-
-
-    chat.innerHTML = `
-
-        <div class="empty-message">
-
-            Your conversation will appear here.
-
-        </div>
-
-    `;
-
+    createEmptyMessage();
 }
 
 
-/* =========================================
-   STATUS BAR LIVE PREVIEW
-========================================= */
-
-phoneTimeInput.addEventListener(
-    "input",
-    updateStatusBar
-);
+/* =========================================================
+   EVENTS
+========================================================= */
 
 
-wifiStrengthInput.addEventListener(
-    "change",
-    updateStatusBar
-);
-
-
-batteryLevelInput.addEventListener(
-    "input",
-    updateStatusBar
-);
-
-
-/* =========================================
-   BUTTONS
-========================================= */
+/* Generate */
 
 generateButton.addEventListener(
     "click",
@@ -978,14 +711,87 @@ generateButton.addEventListener(
 );
 
 
+/* Clear */
+
 clearButton.addEventListener(
     "click",
     clearConversation
 );
 
 
-/* =========================================
-   INITIAL STATUS BAR
-========================================= */
+/* Contact */
 
-updateStatusBar();
+recipientInput.addEventListener(
+    "input",
+    updateContact
+);
+
+
+/* Phone settings */
+
+phoneTimeInput.addEventListener(
+    "input",
+    updatePhoneSettings
+);
+
+wifiStrengthInput.addEventListener(
+    "change",
+    updatePhoneSettings
+);
+
+batteryLevelInput.addEventListener(
+    "input",
+    updatePhoneSettings
+);
+
+
+/* Message status */
+
+messageStatusInput.addEventListener(
+    "change",
+    () => {
+
+        /*
+           Kept as a setting so it can be
+           expanded later for Delivered/Read
+           indicators without changing the UI.
+        */
+
+        updateMessageStatus();
+    }
+);
+
+
+/* =========================================================
+   MESSAGE STATUS
+========================================================= */
+
+function updateMessageStatus() {
+    generateConversation();
+}
+
+/* =========================================================
+   ENTER KEY SHORTCUT
+========================================================= */
+
+messageInput.addEventListener(
+    "keydown",
+    (event) => {
+
+        /*
+           Ctrl + Enter / Cmd + Enter
+           generates the conversation.
+        */
+
+        if (
+            event.key === "Enter" &&
+            (event.ctrlKey || event.metaKey)
+        ) {
+
+            event.preventDefault();
+
+            generateConversation();
+        }
+
+    }
+);
